@@ -40,6 +40,7 @@ Projects
 * hid_liber     - [HID liberation controller][HID_liber](by alaricljs)
 * phantom       - [Phantom keyboard][PHANTOM] (by Tranquilite)
 * gh60          - [GH60 keyboard][GH60]
+* frobiac       - [BlueCube & HyperNano][DT_frobiac]
 
 [GH_macway]:    http://geekhack.org/showwiki.php?title=Island:11930
 [GH_hhkb]:      http://geekhack.org/showwiki.php?title=Island:12047
@@ -54,6 +55,7 @@ Projects
 [HID_liber]:    http://deskthority.net/wiki/HID_Liberation_Device_-_DIY_Instructions
 [PHANTOM]:      http://geekhack.org/index.php?topic=26742
 [GH60]:         http://geekhack.org/index.php?topic=34959
+[DT_frobiac]:   http://deskthority.net/workshop-f7/my-diy-keyboard-collection-or-how-i-became-a-kb-geek-t2534.html
 
 
 
