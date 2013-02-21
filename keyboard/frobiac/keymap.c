@@ -148,6 +148,16 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 
+/* id for user defined functions */
+enum function_id {
+    LSHIFT_LPAREN,
+    RSHIFT_RPAREN,
+    QWERTZ,
+    MACRO                   = 0xff
+};
+
+
+
 /*
  * Fn action definition
  */
@@ -162,9 +172,12 @@ static const uint16_t PROGMEM fn_actions[] = {
     ACTION_RMOD_TAP_KEY(KC_RCTL, KC_TAB),           // FN6 Ctrl  with tap Tab
 
 /// FN7 - FN9 dummy free for testing
-    ACTION_LAYER_SET(0),                            // FN7
-    ACTION_LAYER_SET(0),                            // FN8
-    ACTION_LAYER_SET(0),                            // FN9
+    // ACTION_LAYER_SET(0),                            // FN7
+    // ACTION_LAYER_SET(0),                            // FN8
+    // ACTION_LAYER_SET(0),                            // FN9
+    ACTION_FUNCTION_TAP(QWERTZ),                    // FN7
+    ACTION_FUNCTION_TAP(RSHIFT_RPAREN),             // FN8
+    ACTION_FUNCTION(MACRO, 0),                      // FN9 Macro:
 
 /// FN10..19: Shifted special chars on Qwertz
     ACTION_RMOD_KEY(KC_RSFT, KC_NUHS), // Shift+# = '
@@ -247,4 +260,142 @@ action_t action_for_key(uint8_t layer, key_t key)
     }
 }
 
+
+
+/*
+ * user defined action function
+ */
+//void keymap_call_function(keyrecord_t *record, uint8_t id, uint8_t opt)
+void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
+{
+    print_enable = true;
+
+    keyevent_t event = record->event; // keyevent with key (row,col), pressed, time
+    uint8_t tap_count = record->tap_count;
+    uint8_t tapped = 0;
+/*
+    debug("action_call_function: ");
+    if (event.pressed) debug("pressed"); else debug("released");
+    debug(" id: "); debug_hex(id);
+    debug(" tap_count: "); debug_dec(tap_count);
+    debug("\n");
+*/
+    switch (id) {
+        case QWERTZ:
+            //print("\nQWERTZ: "); pdec(event.key.col); pdec(event.key.row);
+            if (waiting_buffer_has_anykey_pressed()) {
+                tapped = get_tapping_key();
+                print_S("\n2nd: "); print_hex8(tapped);
+            }
+            if (event.pressed) {
+                if (tap_count == 0) {
+                    // no other key pressed yet, wait...
+                    /*if(event.key.col < 4)
+                        add_mods(MOD_BIT(KC_LSHIFT));
+                    else
+                        add_mods(MOD_BIT(KC_RALT));
+                        */
+                    //add_mods(MOD_BIT(KC_LSHIFT));
+                } else {
+                    if (waiting_buffer_has_anykey_pressed()) {
+                        // modify according to qwertz mapping now!
+                        // ad hoc: set 0 to cancel tap
+                        // debug_hex((event.key.row<<4)| event.key.col);
+                        record->tap_count = 0;
+                        if(tapped < 4)
+                            add_mods(MOD_BIT(KC_LSHIFT));
+                        else
+                            add_mods(MOD_BIT(KC_RALT));
+
+                        // add_mods(MOD_BIT(KC_LSHIFT));
+                    } else {
+                        // released FNx as only key, no other key had been pressed additionally
+                    }
+                }
+            } else {
+                if (tap_count == 0) {
+                    if(tapped < 4)
+                        del_mods(MOD_BIT(KC_LSHIFT));
+                    else
+                        del_mods(MOD_BIT(KC_RALT));
+                    //del_mods(MOD_BIT(KC_LSHIFT));
+                } else {
+                    /*
+                    //unregister_code(KC_9);
+                    //unregister_code(KC_LSHIFT);
+                    host_del_mods(MOD_BIT(KC_LSHIFT));
+                    host_del_key(KC_9);
+                    host_send_keyboard_report();
+                    */
+                }
+            }
+            break;
+        case LSHIFT_LPAREN:
+            // LShft + tap '('
+            if (event.pressed) {
+                if (tap_count == 0) {
+                    add_mods(MOD_BIT(KC_LSHIFT));
+                } else {
+                    if (waiting_buffer_has_anykey_pressed()) {
+                        // ad hoc: set 0 to cancel tap
+                        record->tap_count = 0;
+                        add_mods(MOD_BIT(KC_LSHIFT));
+                    } else {
+                        // NOTE to avoid conflicting command key bind(LShift+RShift)
+                        //register_code(KC_LSHIFT);
+                        register_code(KC_9);
+                        /*
+                        host_add_mods(MOD_BIT(KC_LSHIFT));
+                        host_add_key(KC_9);
+                        host_send_keyboard_report();
+                        */
+                    }
+                }
+            } else {
+                if (tap_count == 0) {
+                    del_mods(MOD_BIT(KC_LSHIFT));
+                } else {
+                    //unregister_code(KC_9);
+                    //unregister_code(KC_LSHIFT);
+                    host_del_mods(MOD_BIT(KC_LSHIFT));
+                    host_del_key(KC_9);
+                    host_send_keyboard_report();
+                }
+            }
+            break;
+        case RSHIFT_RPAREN:
+            // RShift + tap ')'
+            if (event.pressed) {
+                if (tap_count == 0) {
+                    add_mods(MOD_BIT(KC_RSHIFT));
+                } else {
+                    if (waiting_buffer_has_anykey_pressed()) {
+                        // ad hoc: set 0 to cancel tap
+                        record->tap_count = 0;
+                        add_mods(MOD_BIT(KC_RSHIFT));
+                    } else {
+                        //register_code(KC_RSHIFT);
+                        //register_code(KC_0);
+                        host_add_mods(MOD_BIT(KC_RSHIFT));
+                        host_add_key(KC_0);
+                        host_send_keyboard_report();
+                    }
+                }
+            } else {
+                if (tap_count == 0) {
+                    del_mods(MOD_BIT(KC_RSHIFT));
+                } else {
+                    //unregister_code(KC_0);
+                    //unregister_code(KC_RSHIFT);
+                    host_del_mods(MOD_BIT(KC_RSHIFT));
+                    host_del_key(KC_0);
+                    host_send_keyboard_report();
+                }
+            }
+            break;
+        case MACRO:
+            action_macro_play(get_macro(opt, event.pressed));
+            break;
+    }
+}
 

@@ -901,3 +901,13 @@ static void debug_waiting_buffer(void)
     }
     debug("}\n");
 }
+
+
+// frobiac: test function for qwertz remapping
+uint8_t get_tapping_key()
+{
+    // keyevent_t e = waiting_buffer[(waiting_buffer_head-1)%WAITING_BUFFER_SIZE].event;
+    keyevent_t e = tapping_key.event;
+    return ( (e.key.row<<4) | e.key.col);
+};
+

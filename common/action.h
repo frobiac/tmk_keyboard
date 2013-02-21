@@ -74,7 +74,8 @@ typedef union {
     } func;
 } action_t;
 
-
+// frobiac: Test function for qwertz remapping
+uint8_t get_tapping_key(void);
 
 /* layer used currently */
 extern uint8_t current_layer;
