@@ -6,13 +6,13 @@ BlueCube is a split design with two 4x6 matrices, HyperNano a one-piece board wi
 My own current custom firmware can be found [here](http://github.com/frobiac/adnw)
 
 ## Threads on Deskthority.org
-- [Prototyping]( tbd )
+- [Prototyping](http://deskthority.net/workshop-f7/my-diy-keyboard-collection-or-how-i-became-a-kb-geek-t2534.html)
 
 
 ## Build
 Move to this directory then just run `make` like:
 
-   $ make -f Makfile.lufa
+   $ make -f Makefile.lufa  \[hypernano|bluecube]
 
 
 ## Boot Magic
@@ -24,7 +24,7 @@ TBD
 Currently using a slightly adapted AdNW layout with programming and navigation layers inspired by neo-layout.org
 Outer pinky columns are only available on BlueCube, and not displayed below.
 
-See [keymap.h](keymap.h) for detail.
+See [keymap.c](keymap.c) for detail.
 
 Note that the keymap is configured to be used on a host with QWERTZ driver. Therefore nearly all special characters in the code need to be mapped by means of FNxx actions since additional modifiers are often necessary.
 ### Layers
@@ -45,9 +45,9 @@ All layers utilize the same thumb-row for frequent keys and modifiers. This in n
       $ | ~ `    ^ % " '
 
 #### Layer 4: (navigation & numbers)
-    ⇞ ⌫ ↑ ⌦ ⇟    ß 7 8 9 ä
-    « ← ↓ → »    . 4 5 6 ö
-    ⎋ ⇥ i ⏎      0 1 2 3 ü
+    ⇞ ⇤ ↑ ⇥ ⇟    ß 7 8 9 ä     ⇤,⇥ : backspace & delete
+    ⇤ ← ↓ → ⇥    . 4 5 6 ö
+    e ⇥ i ⏎      0 1 2 3 ü     e,i : esc & insert
 
 
 #### Thumb-row
@@ -57,38 +57,38 @@ In mouse mode (when using the integrated trackpoint) they also act as mouse butt
 
 ##### Modifier mode
 
-            0  4
-  . S A C ␣ G  3 1 2 A . .
+              0  4
+    . S A C ␣ G  3 1 2 A . .
 
 ##### Keycode mode
-            .  .
-  . . . ⇥ ␣ .  ⎋ ⌫ ⏎ . . .
-
-
-### Symbol reference
-» « ⇧ ⇥ ⇤ ␣ ⇪ ⏏ ⇞ ⇟ ↖ ↘ ⏎ ↵ ↩ ⌘ ⌥
+              .  .
+    . . . ⇥ ␣ .  e ⌫ ⏎ . . .   e = esc
 
 
 ### QWERTZ remapping
 All characters that are different to qwerty are created with actions that set the correct modifiers, e.g.
+
     // @ is RALT+q and mapped to FN23
     ACTION_RMOD_KEY(KC_RALT, KC_Q), // AltGr+q = @ 
 
 
 The number row is different:
+
     Normal: ^ 1 2 3 4 5 6 7 8 9 0 ß ´ 
     Shift : ° ! " § $ % & / ( ) = ? `
     AltGr : ¬ ¹ ² ³ ¼ ½ ¬ { [ ] } \ ¸
 
 On QWERTZ, the other hid codes are translated according to the following table (normal,shifted and with right alt):
+
     Y    Z    E    Q    SLSH BSLS MINS EQL  GRV  NUBS QUOT SCLN LBRC RBRC 
     z    y    e    q    -    #    ß    ´    ^    <    ä    ö    ü    +    
     Z    Y    E    Q    _    '    ?    `    °    >    Ä    Ö    Ü    *    
               €    @              \              |         ˝    "    ~
 
 Some characters can be used from the numpad:
-   PSLS PAST PMNS PPLS PDOT PEQL
-   /    *    -    +    .    = 
+
+    PSLS PAST PMNS PPLS PDOT PEQL
+    /    *    -    +    .    = 
 
 
 
